@@ -3,9 +3,9 @@
 # - квадратное уровнение
 
 puts 'Hi! Enter 3 coefficients.'
-a = gets.chomp.to_i
-b = gets.chomp.to_i
-c = gets.chomp.to_i
+a = gets.chomp.to_f
+b = gets.chomp.to_f
+c = gets.chomp.to_f
 
 d = b**2 - 4 * a * b
 

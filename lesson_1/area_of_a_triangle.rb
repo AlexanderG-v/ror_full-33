@@ -5,8 +5,8 @@
 puts "Let's calculate the area of the triange?"
 sleep 2
 puts 'What is length of base of the triangle in sm?'
-base = gets.chomp
+base = gets.chomp.to_f
 puts 'Now indicate height of the triandge in sm'
-height = gets.chomp
+height = gets.chomp.to_f
 
-puts "The area of the triagle is #{0.5 * base.to_i * height.to_i} sm."
+puts "The area of the triagle is #{0.5 * base * height} sm."
