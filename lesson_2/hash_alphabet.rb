@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 
+alph = ('a'..'z').to_a
+vowels = %w[a e i o u y]
+hash = {}
 
-alph = ('a..z')
-vowels = ('a,e,i,o,u,y') 
-vowels_hash = {}
-
-vowels.each do |letter|
-  vowels_hash[vowels[i]] = alph.index(vowels[i]) + 1
+alph.each_with_index do |item, index|
+  index += 1
+  vowels.each do |vowel|
+    hash[vowel] = index if item == vowel
+  end
 end
-
-print vowels_hash
