@@ -18,7 +18,6 @@ class Route
     @intermediate_station = [starting_station, ending_station]
   end
 
-  # - повторяется в классе Станций
   def adding_stations(name_station)
     @intermediate_station.insert(-2, name_station)
   end
@@ -33,4 +32,28 @@ class Route
 end
 
 class Train
+  attr_reader :current_speed, :wagons
+
+  def initialize(number, type, wagons)
+    @number = number
+    @type = type
+    @wagons = wagons.to_i
+    @current_speed = 0
+  end
+
+  def speed_up(speed)
+    @current_speed += speed
+  end
+
+  def stop
+    @current_speed = 0
+  end
+
+  def add_wagons
+    @wagons += 1 if @current_speed.zero?
+  end
+
+  def remove_wagons
+    @wagons -= 1 if @current_speed.zero?
+  end
 end
