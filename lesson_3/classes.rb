@@ -22,21 +22,22 @@ class Station
 end
 
 class Route
-  def initialize(starting_station, ending_station)
-    @intermediate_station = [starting_station, ending_station]
+  def initialize(first_station, last_station)
+    @stations = [first_station, last_station]
   end
 
   def adding_stations(station)
-    @intermediate_station.insert(-2, station)
+    @stations.insert(-2, station)
   end
 
   def delete_station(station)
-    @intermediate_station.delete(station)
+    @stations.delete(station)
   end
 
   def show_stations
-    @intermediate_station.each { |name| puts name }
+    @stations.each { |name| puts name }
   end
+
 end
 
 class Train
@@ -64,4 +65,15 @@ class Train
   def remove_wagons
     @wagons -= 1 if @current_speed.zero?
   end
+
+  def add_route(route)
+    @route = route
+    
+  end
+
+
+
 end
+
+
+
