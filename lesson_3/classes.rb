@@ -3,13 +3,21 @@
 class Station
   attr_reader :trains
 
-  def initialize(name_station)
-    @name_station = name_station
+  def initialize(name)
+    @name = name
     @trains = []
   end
 
-  def arrival_train(name_train)
-    @trains << name_train
+  def arrival(train)
+    @trains << train
+  end
+
+  def train_type(type)
+    @trains.select { |train| train.type == type }
+  end
+
+  def departure(train)
+    @trains.delete(train)
   end
 end
 
@@ -18,12 +26,12 @@ class Route
     @intermediate_station = [starting_station, ending_station]
   end
 
-  def adding_stations(name_station)
-    @intermediate_station.insert(-2, name_station)
+  def adding_stations(station)
+    @intermediate_station.insert(-2, station)
   end
 
-  def delete_station(name_station)
-    @intermediate_station.delete(name_station)
+  def delete_station(station)
+    @intermediate_station.delete(station)
   end
 
   def show_stations
@@ -32,7 +40,7 @@ class Route
 end
 
 class Train
-  attr_reader :current_speed, :wagons
+  attr_reader :current_speed, :wagons, :type
 
   def initialize(number, type, wagons)
     @number = number
