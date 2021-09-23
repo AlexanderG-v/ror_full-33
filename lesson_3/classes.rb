@@ -26,7 +26,7 @@ class Route
     @stations = [first_station, last_station]
   end
 
-  def adding_stations(station)
+  def add_stations(station)
     @stations.insert(-2, station)
   end
 
@@ -38,6 +38,9 @@ class Route
     @stations.each { |name| puts name }
   end
 
+  def add_train(train)
+    @stations[0].arrival(train)
+  end
 end
 
 class Train
@@ -58,22 +61,15 @@ class Train
     @current_speed = 0
   end
 
-  def add_wagons
-    @wagons += 1 if @current_speed.zero?
-  end
-
-  def remove_wagons
-    @wagons -= 1 if @current_speed.zero?
+  def change_count_wagons(wagon)
+    case wagon
+    when 'add' then @wagons += 1 if @current_speed.zero?
+    when 'remove' then @wagons -= 1 if @current_speed.zero?
+    end
   end
 
   def add_route(route)
     @route = route
-    
+    @route.add_train(self)
   end
-
-
-
 end
-
-
-
