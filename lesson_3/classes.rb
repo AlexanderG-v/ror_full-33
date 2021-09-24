@@ -76,12 +76,14 @@ class Train
     self.current_speed = 0
   end
 
-  # - прицепляет/отцепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
-  def change_count_wagons(wagon)
-    case wagon
-    when 'add' then self.wagons += 1 if self.current_speed.zero?
-    when 'remove' then self.wagons -= 1 if self.current_speed.zero?
-    end
+  # - прицепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
+  def add_wagons
+    self.wagons += 1 if self.current_speed.zero?
+  end
+
+  # - отцепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
+  def remove_wagons
+    self.wagons -= 1 if self.current_speed.zero?
   end
 
   # - принимает маршрут следования (экземпляр класса Route)
