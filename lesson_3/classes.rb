@@ -90,14 +90,13 @@ class Train
   # - при назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте
   def add_route(route)
     @route = route
-    @current_station = nil
     @current_station = @route.stations[0]
     @route.add_train(self)
   end
 
   def previous_station
     if @current_station == @route.stations.first
-      raise 'No previous station, current station is initial'
+      nil
     else
       @route.stations[@route.stations.index(@current_station) - 1]
     end
@@ -105,7 +104,7 @@ class Train
 
   def next_station
     if @current_station == @route.stations.last
-      raise 'No next station, current station is final'
+      nil
     else
       @route.stations[@route.stations.index(@current_station) + 1]
     end
@@ -113,6 +112,8 @@ class Train
 
   # - перемещение вперед между станциями, но только на одну станцию за раз
   def go_forward
+    return unless next_station
+
     @current_station.departure(self)
     @current_station = next_station
     @current_station.arrival(self)
@@ -120,6 +121,8 @@ class Train
 
   # - перемещение назад между станциями, но только на одну станцию за раз
   def go_back
+    return unless previous_station
+
     @current_station.departure(self)
     @current_station = previous_station
     @current_station.arrival(self)
