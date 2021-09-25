@@ -55,7 +55,7 @@ class Route
 end
 
 class Train
-  # - при создании экземпляра класса указывается номер (произвольная трока) и тип (грузовой, пассажирский) и кол-во вагонов
+  # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский) и кол-во вагонов
   attr_accessor :current_speed, :wagons
   attr_reader :type
 
@@ -93,19 +93,15 @@ class Train
     @current_station = @route.stations[0]
     @route.add_train(self)
   end
-
+  # - возвращает предыдущую станцию, на основе маршрута
   def previous_station
-    if @current_station == @route.stations.first
-      nil
-    else
+    if @current_station != @route.stations.first
       @route.stations[@route.stations.index(@current_station) - 1]
     end
   end
-
+  # - возвращает следующую станцию, на основе маршрута
   def next_station
-    if @current_station == @route.stations.last
-      nil
-    else
+    if @current_station != @route.stations.last
       @route.stations[@route.stations.index(@current_station) + 1]
     end
   end
