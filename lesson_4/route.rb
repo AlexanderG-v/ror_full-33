@@ -22,7 +22,7 @@ class Route
   def show_stations
     @stations.each { |station| puts station.name.to_s }
   end
-  
+
   # - при назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте
   def add_train(train)
     @stations[0].arrival(train)

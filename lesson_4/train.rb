@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class Train
-  # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский) и кол-во вагонов
-  attr_accessor :current_speed, :wagons
-  attr_reader :type
+  # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
+  attr_accessor :wagons
+  attr_reader :current_speed
 
-  def initialize(number, type)
+  def initialize(number)
     @number = number
-    @type = type
     @wagons = []
     @current_speed = 0
   end
@@ -23,13 +22,13 @@ class Train
   end
 
   # - прицепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
-  def add_wagons(type_wagon)
-    wagons << type_wagon if self.current_speed.zero?
+  def add_wagons(wagon)
+    wagons << wagon if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
 
-  # - отцепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
-  def remove_wagons(type_wagon)
-    wagons.delete(type_wagon) if self.current_speed.zero?
+  # - отцепляет вагоны по типу (грузовой/пассажирский (по одному вагону за операцию) при условии, что поезд не движется
+  def remove_wagons(wagon)
+    wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
 
   # - принимает маршрут следования (экземпляр класса Route)
@@ -67,4 +66,9 @@ class Train
     @current_station = previous_station
     @current_station.arrival(self)
   end
+  # занечени current_speed устанавливается общедоступными методами
+
+  private
+
+  attr_writer :current_speed, :wagons
 end
