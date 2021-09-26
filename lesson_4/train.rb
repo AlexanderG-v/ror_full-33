@@ -5,10 +5,10 @@ class Train
   attr_accessor :current_speed, :wagons
   attr_reader :type
 
-  def initialize(number, type, wagons)
+  def initialize(number, type)
     @number = number
     @type = type
-    @wagons = wagons.to_i
+    @wagons = []
     @current_speed = 0
   end
 
@@ -23,13 +23,13 @@ class Train
   end
 
   # - прицепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
-  def add_wagons
-    self.wagons += 1 if self.current_speed.zero?
+  def add_wagons(type_wagon)
+    wagons << type_wagon if self.current_speed.zero?
   end
 
   # - отцепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
-  def remove_wagons
-    self.wagons -= 1 if self.current_speed.zero?
+  def remove_wagons(type_wagon)
+    wagons.delete(type_wagon) if self.current_speed.zero?
   end
 
   # - принимает маршрут следования (экземпляр класса Route)
