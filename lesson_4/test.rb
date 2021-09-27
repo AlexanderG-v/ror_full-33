@@ -48,4 +48,18 @@ class Main
       item_selection
     end
   end
+
+  # Метод создания станции. При создании указывается название станции
+  def create_station
+    print 'Введите название станции: '
+    station = gets.chomp
+    @stations << Station.new(station)
+    puts "Вы создали станцию #{station}!"
+    item_selection
+  end
+
+
+
+
+
 end
