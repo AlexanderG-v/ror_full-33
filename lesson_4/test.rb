@@ -58,6 +58,17 @@ class Main
     item_selection
   end
 
+  # Метод созания поезда. При создании поезда указывается номер и тип
+
+  def create_train
+    print 'Введите № поезда: '
+    num_train = gets.chomp.to_i
+    
+    puts 'Выбирете тип поезда: пассажирский или грузовой?'
+    type_train = gets
+
+    @trains << CargoTrain(num_train) if type_train == 'пассажирский'
+  end
 
 
 
