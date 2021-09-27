@@ -3,7 +3,7 @@
 class Train
   # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
   attr_accessor :wagons
-  attr_reader :current_speed
+  attr_reader :current_speed, :number
 
   def initialize(number)
     @number = number

@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 require_relative 'train'
-require_relative 'route'
+# require_relative 'route'
 require_relative 'station'
-require_relative 'cargo_wagons'
+# require_relative 'cargo_wagons'
 require_relative 'passenger_wagons'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
 
 puts 'Добро пожаловать на пульт управления поездами!'
-
-# frozen_string_literal: true
 
 class Main
   attr_accessor :trains, :stations, :route, :wagons
@@ -64,10 +62,15 @@ class Main
   # Метод создания станции. При создании указывается название станции
   def create_station
     print 'Введите название станции: '
-    station = gets.chomp
-    @stations << Station.new(station)
-    puts "Вы создали станцию #{station}!"
-    item_selection # ?????
+    name_station = gets.chomp
+
+    if @stations.find { |station| station.name == name_station }
+      puts 'Станция с таким названием уже существует!'
+    else
+      @stations << Station.new(name_station)
+      puts "Вы создали станцию \"#{name_station.capitalize}\"!"
+      # item_selection # ?????
+    end
   end
 
   # Метод созания поезда. При создании поезда указывается номер и тип
@@ -76,29 +79,33 @@ class Main
     print 'Введите № поезда: '
     num_train = gets.chomp.to_i
 
-    print 'Выбирете тип поезда, где 1 - это пассажирский поезд, а 2 - это грузовой поезд: '
-    type_train = gets.to_i
+    if @trains.find { |train| train.number == num_train }
+      puts 'Поезд с таким номером уже существует!'
 
-    case type_train
-    when 1
-      @trains << PassengerTrain.new(num_train)
-      puts "Вы создали пассажирский поезд № #{num_train}!"
-    when 2
-      @trains << CargoTrain.new(num_train)
-      puts "Вы создали грузовой поезд № #{num_train}!"
     else
-      puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
-      create_train
+      print 'Выбирете тип поезда, где 1 - это пассажирский поезд, а 2 - это грузовой поезд: '
+      type_train = gets.to_i
+      case type_train
+      when 1
+        @trains << PassengerTrain.new(num_train)
+        puts "Вы создали пассажирский поезд № #{num_train}!"
+      when 2
+        @trains << CargoTrain.new(num_train)
+        puts "Вы создали грузовой поезд № #{num_train}!"
+      else
+        puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
+        create_train
+      end
     end
-    item_selection # ?????
   end
 
-# Метод создания маршрута. При создании маршрута указываются начальная и конечная станция
+  # item_selection # ?????
 
+  # Метод создания маршрута. нужна проверка наличия двух станций начальной и конечной
 
-
+  def create_route; end
 end
 
-main = Main.new
-main.menu
-main.item_selection
+# main = Main.new
+# main.menu
+# main.item_selection
