@@ -10,3 +10,9 @@ require_relative 'passenger_train'
 
 
 require_relative 'test'
+
+puts 'Добро пожаловать на пульт управления поездами!'
+
+main = Main.new
+main.start
+main.item_selection
