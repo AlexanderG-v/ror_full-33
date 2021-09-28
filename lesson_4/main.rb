@@ -98,7 +98,25 @@ class Main
 
   # Метод создания маршрута. нужна проверка наличия двух станций начальной и конечной
 
-  def create_route; end
+  def create_route
+    if stations.size >= 2
+      puts 'Для создания маршрута необходимо не менее двух станций!'
+      stations_list
+      puts 'Пожалуйста, введите порядковый номер начальной станции из списка'
+      first_station = gets.chomp.to_i - 1
+      puts 'Теперь введите порядковый номер конечной станции.'
+      last_station = gets.chomp.to_i - 1
+      @route << Route.new(stations[first_station], stations[last_station])
+      @route.each do | station|
+      puts "Вы создали маршрут"
+      end
+    
+    else
+      puts 'Недостаточно станций для создания маршруты! Пожалуйста, создайте станцию.'
+      create_station
+    end
+
+  end
 
   def add_wagons_to_train
     if @trains.empty?
@@ -139,6 +157,12 @@ class Main
         @trains[index_train].wagons.pop
         puts 'У поезда удален вагон!'
       end
+    end
+  end
+
+  def stations_list
+    stations.each_with_index do |station, index|
+      puts "#{index + 1}. станция \"#{station.name.capitalize}\"."
     end
   end
 
