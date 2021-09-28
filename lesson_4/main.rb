@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require_relative 'train'
-# require_relative 'route'
+require_relative 'route'
 require_relative 'station'
-# require_relative 'cargo_wagons'
+require_relative 'cargo_wagons'
 require_relative 'passenger_wagons'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
@@ -17,7 +17,6 @@ class Main
     @stations = []
     @trains = []
     @route = []
-    @wagons = []
   end
 
   def menu
@@ -59,7 +58,6 @@ class Main
     end
   end
 
-  # Метод создания станции. При создании указывается название станции
   def create_station
     print 'Введите название станции: '
     name_station = gets.chomp
@@ -72,8 +70,6 @@ class Main
       # item_selection # ?????
     end
   end
-
-  # Метод созания поезда. При создании поезда указывается номер и тип
 
   def create_train
     print 'Введите № поезда: '
@@ -96,14 +92,44 @@ class Main
         puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
         create_train
       end
+      # item_selection # ?????
     end
   end
-
-  # item_selection # ?????
 
   # Метод создания маршрута. нужна проверка наличия двух станций начальной и конечной
 
   def create_route; end
+
+  # Метод добавляет вагоны к поезду. Pass to Pass, Cargo to Cargo
+  def add_wagons_to_train
+    if @trains.empty?
+      puts 'Поездов не найдено! Сначала создайте поезд.'
+      create_train
+    else
+      puts 'Выбирете порядковый номер поезда, к которому прицепить вагон:'
+      trains_list
+      index_train = gets.to_i - 1
+      if index_train > @trains.size - 1
+        puts 'Вы вводите неправильный порядковый номер поезда! Попробуйте еще раз.'
+        add_wagons_to_train
+      else
+        case @trains[index_train].type_train
+        when 'passenger'
+          @trains[index_train].add_wagons(PassengerWagons.new)
+          puts 'Вагон прицеплен!'
+        when 'cargo'
+          @trains[index_train].add_wagons(CargoWagons.new)
+          puts 'Вагон прицеплен!'
+        end
+      end
+    end
+  end
+
+  def trains_list
+    trains.each_with_index do |train, index|
+      puts "#{index + 1}. Поезд № #{train.number}, тип поезда: #{train.type_train}, прицеплено вагонов: #{train.wagons.size}."
+    end
+  end
 end
 
 # main = Main.new
