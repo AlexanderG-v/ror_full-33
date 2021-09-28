@@ -27,8 +27,8 @@ class Train
   end
 
   # - отцепляет вагоны по типу (грузовой/пассажирский (по одному вагону за операцию) при условии, что поезд не движется
-  def remove_wagons(wagon)
-    wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
+  def remove_wagons (wagon)
+   wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
 
   # - принимает маршрут следования (экземпляр класса Route)
@@ -70,5 +70,5 @@ class Train
 
   private
 
-  attr_writer :current_speed, :wagons
+  attr_writer :current_speed
 end

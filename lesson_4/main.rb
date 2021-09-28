@@ -47,7 +47,7 @@ class Main
     when 5 then remove_station_frome_route
     when 6 then add_train_route
     when 7 then add_wagons_to_train
-    when 8 then remoove_wagons_from_train
+    when 8 then remove_wagons_from_train
     when 9 then train_go_forvard
     when 10 then train_go_back
     when 11 then show_list_stations_and_trains_at_station
@@ -100,7 +100,6 @@ class Main
 
   def create_route; end
 
-  # Метод добавляет вагоны к поезду. Pass to Pass, Cargo to Cargo
   def add_wagons_to_train
     if @trains.empty?
       puts 'Поездов не найдено! Сначала создайте поезд.'
@@ -116,11 +115,29 @@ class Main
         case @trains[index_train].type_train
         when 'passenger'
           @trains[index_train].add_wagons(PassengerWagons.new)
-          puts 'Вагон прицеплен!'
+          puts 'К поезду прицеплен вагон!'
         when 'cargo'
           @trains[index_train].add_wagons(CargoWagons.new)
-          puts 'Вагон прицеплен!'
+          puts 'К поезду прицеплен вагон!'
         end
+      end
+    end
+  end
+
+  def remove_wagons_from_train
+    if @trains.empty?
+      puts 'Поездов не найдено! Сначала созайте поезд.'
+      create_train
+    else
+      puts 'Выбирете порядковый номер поезда, у которого необходимо отцепить вагон:'
+      trains_list
+      index_train = gets.to_i - 1
+      if @trains[index_train].wagons.empty?
+        puts 'У поезда отсутствуют вагоны! Выберите другой поезд.'
+        trains_list
+      else
+        @trains[index_train].wagons.pop
+        puts 'У поезда удален вагон!'
       end
     end
   end
@@ -129,6 +146,14 @@ class Main
     trains.each_with_index do |train, index|
       puts "#{index + 1}. Поезд № #{train.number}, тип поезда: #{train.type_train}, прицеплено вагонов: #{train.wagons.size}."
     end
+  end
+
+  def seed
+    @stations << Station.new('Стрешнево')
+    @stations << Station.new('Красногорск')
+    @stations << Station.new('Нахабино')
+    @trains << PassengerTrain.new(111)
+    @trains << CargoTrain.new(777)
   end
 end
 
