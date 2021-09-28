@@ -96,8 +96,6 @@ class Main
     end
   end
 
-  # Метод создания маршрута. нужна проверка наличия двух станций начальной и конечной
-
   def create_route
     if stations.size >= 2
       puts 'Для создания маршрута необходимо не менее двух станций!'
@@ -107,15 +105,39 @@ class Main
       puts 'Теперь введите порядковый номер конечной станции.'
       last_station = gets.chomp.to_i - 1
       @route << Route.new(stations[first_station], stations[last_station])
-      @route.each do | station|
-      puts "Вы создали маршрут"
-      end
-    
+      # @route.each do |station|
+      puts 'Вы создали маршрут'
+
     else
-      puts 'Недостаточно станций для создания маршруты! Пожалуйста, создайте станцию.'
+      puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
       create_station
     end
+  end
 
+  def add_station_in_route
+    if @route.empty?
+      puts 'Маршрутов не найдено! Сначала создайте маршрут!'
+      create_route
+    else
+      puts 'Выберите порядковый номер маршрута, что бы добавить станцию:'
+      route_list
+      index_route = gets.chomp.to_i - 1
+      if index_route > @route.size - 1
+        puts 'Вы вводите неправильный порядковый номер маршрута! Попробуйте еще раз.'
+        add_station_in_route
+      else
+        puts 'Выберете порядковый номер станции, которую необходимо добавить в мартшрут:'
+        stations_list
+        index_station = gets.chomp.to_i - 1
+        if index_station > @stations.size - 1
+          puts 'Вы вводите неправильный порядковый номер станции! Попробуйте еще раз.'
+          stations_list
+        else
+          @route[index_route].add_stations(index_station)
+          puts 'Вы добавили станцию к маршруту!'
+        end
+      end
+    end
   end
 
   def add_wagons_to_train
@@ -172,7 +194,15 @@ class Main
     end
   end
 
+  def route_list
+    route.each_with_index do |route, index|
+      puts "#{index + 1}. Маршрут: #{route.name * ' - '}."
+    end
+  end
+
   def seed
+    @stations << Station.new('Москва')
+    @stations << Station.new('Петушки')
     @stations << Station.new('Стрешнево')
     @stations << Station.new('Красногорск')
     @stations << Station.new('Нахабино')

@@ -2,10 +2,11 @@
 
 class Route
   # - При создании экземпляра класса указывается начальная и конечная станции
-  attr_reader :stations
+  attr_reader :stations, :name
 
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
+    @name = [first_station.name, last_station.name]
   end
 
   # - добовляет промежуточную станцию в список
