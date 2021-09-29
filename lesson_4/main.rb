@@ -316,16 +316,6 @@ class Main
       puts "#{index + 1}. Маршрут: #{route.name * ' - '}."
     end
   end
-
-  def seed
-    @stations << Station.new('Москва')
-    @stations << Station.new('Петушки')
-    @stations << Station.new('Стрешнево')
-    @stations << Station.new('Красногорск')
-    @stations << Station.new('Нахабино')
-    @trains << PassengerTrain.new(111)
-    @trains << CargoTrain.new(777)
-  end
 end
 
 main = Main.new
