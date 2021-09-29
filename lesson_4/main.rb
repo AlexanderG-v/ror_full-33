@@ -211,6 +211,38 @@ class Main
     end
   end
 
+  def add_train_route
+    if @trains.empty?
+      puts puts 'Поездов не найдено! Сначала созайте поезд.'
+      create_train
+    end
+    if @route.empty?
+      puts 'Маршрутов не найдено! Сначала создайте маршрут!'
+      create_route
+    end
+
+    puts 'Выбирете порядковый номер поезда, для прикрепления его к маршруту:'
+    trains_list
+    index_train = gets.chomp.to_i
+    train = @trains[index_train - 1]
+    if index_train > @trains.size
+      puts 'Вы вводите неправильный порядковый номер поезда! Попробуйте еще раз.'
+      add_train_route
+    else
+      puts 'Выберите порядковый номер маршрута, что бы назначить поезд:'
+      route_list
+      index_route = gets.chomp.to_i
+      route = @route[index_route - 1]
+      if index_route > @route.size
+        puts 'Вы вводите неправильный порядковый номер маршрута! Попробуйте еще раз.'
+        add_train_route
+      else
+        train.add_route(route)
+        puts 'Вы назначили поезд маршруту!'
+      end
+    end
+  end
+
   def stations_list
     stations.each_with_index do |station, index|
       puts "#{index + 1}. станция \"#{station.name.capitalize}\"."
