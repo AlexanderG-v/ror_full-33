@@ -67,7 +67,7 @@ class Main
     else
       @stations << Station.new(name_station)
       puts "Вы создали станцию \"#{name_station.capitalize}\"!"
-      # item_selection # ?????
+      # item_selection ?????
     end
   end
 
@@ -92,21 +92,20 @@ class Main
         puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
         create_train
       end
-      # item_selection # ?????
+      # item_selection ?????
     end
   end
 
   def create_route
-    if stations.size >= 2
+    if @stations.size >= 2
       puts 'Для создания маршрута необходимо не менее двух станций!'
       stations_list
       puts 'Пожалуйста, введите порядковый номер начальной станции из списка'
-      first_station = gets.chomp.to_i - 1
+      first_station = gets.chomp.to_i
       puts 'Теперь введите порядковый номер конечной станции.'
-      last_station = gets.chomp.to_i - 1
-      @route << Route.new(stations[first_station], stations[last_station])
-      # @route.each do |station|
-      puts 'Вы создали маршрут'
+      last_station = gets.chomp.to_i
+      @route << Route.new(stations[first_station - 1], stations[last_station - 1])
+      puts 'Вы создали маршрут!'
 
     else
       puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
@@ -121,20 +120,50 @@ class Main
     else
       puts 'Выберите порядковый номер маршрута, что бы добавить станцию:'
       route_list
-      index_route = gets.chomp.to_i - 1
-      if index_route > @route.size - 1
+      index_route = gets.chomp.to_i
+      if index_route > @route.size
         puts 'Вы вводите неправильный порядковый номер маршрута! Попробуйте еще раз.'
         add_station_in_route
       else
         puts 'Выберете порядковый номер станции, которую необходимо добавить в мартшрут:'
         stations_list
-        index_station = gets.chomp.to_i - 1
-        if index_station > @stations.size - 1
+        index_station = gets.chomp.to_i
+        station = @stations[index_station - 1]
+        if index_station > @stations.size
           puts 'Вы вводите неправильный порядковый номер станции! Попробуйте еще раз.'
-          stations_list
+          add_station_in_route
         else
-          @route[index_route].add_stations(index_station)
+          @route[index_route - 1].add_stations(station)
           puts 'Вы добавили станцию к маршруту!'
+        end
+      end
+    end
+  end
+
+  def remove_station_frome_route
+    if @route.empty?
+      puts 'Маршрутов не найдено!'
+      menu
+      item_selection
+    else
+      puts 'Выберите порядковый номер маршрута, что бы удалить станцию:'
+      route_list
+      index_route = gets.chomp.to_i
+      route = @route[index_route - 1]
+      if index_route > @route.size
+        puts 'Вы вводите неправильный порядковый номер маршрута! Попробуйте еще раз.'
+        remove_station_frome_route
+      else
+        puts 'Выберете порядковый номер станции, которую необходимо удалить из мартшрута.'
+        route.show_stations
+        index = gets.to_i
+        station = route.stations[index - 1]
+        if index > route.stations.size
+          puts 'Вы вводите неправильный порядковый номер станции! Попробуйте еще раз.'
+          remove_station_frome_route
+        else
+          route.delete_station(station)
+          puts 'Вы удалили станцию из маршрута!'
         end
       end
     end
@@ -147,17 +176,17 @@ class Main
     else
       puts 'Выбирете порядковый номер поезда, к которому прицепить вагон:'
       trains_list
-      index_train = gets.to_i - 1
-      if index_train > @trains.size - 1
+      index_train = gets.to_i
+      if index_train > @trains.size
         puts 'Вы вводите неправильный порядковый номер поезда! Попробуйте еще раз.'
         add_wagons_to_train
       else
-        case @trains[index_train].type_train
+        case @trains[index_train - 1].type_train
         when 'passenger'
-          @trains[index_train].add_wagons(PassengerWagons.new)
+          @trains[index_train - 1].add_wagons(PassengerWagons.new)
           puts 'К поезду прицеплен вагон!'
         when 'cargo'
-          @trains[index_train].add_wagons(CargoWagons.new)
+          @trains[index_train - 1].add_wagons(CargoWagons.new)
           puts 'К поезду прицеплен вагон!'
         end
       end
@@ -171,12 +200,12 @@ class Main
     else
       puts 'Выбирете порядковый номер поезда, у которого необходимо отцепить вагон:'
       trains_list
-      index_train = gets.to_i - 1
-      if @trains[index_train].wagons.empty?
+      index_train = gets.to_i
+      if @trains[index_train - 1].wagons.empty?
         puts 'У поезда отсутствуют вагоны! Выберите другой поезд.'
         trains_list
       else
-        @trains[index_train].wagons.pop
+        @trains[index_train - 1].wagons.pop
         puts 'У поезда удален вагон!'
       end
     end

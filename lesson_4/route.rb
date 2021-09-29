@@ -6,9 +6,13 @@ class Route
 
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
-    @name = [first_station.name, last_station.name]
+    @name = stations.first.name, stations.last.name
+
   end
 
+  #def nameexit
+  #@names = stations.first.name, +'-'+ stations.last.name
+  #end
   # - добовляет промежуточную станцию в список
   def add_stations(station)
     @stations.insert(-2, station)
@@ -21,7 +25,7 @@ class Route
 
   # - выводит список всех станций по-порядку от начала до конца
   def show_stations
-    @stations.each { |station| puts station.name.to_s }
+    @stations.each_with_index { |station, index| puts "#{index + 1}. #{station.name}" }
   end
 
   # - при назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте
