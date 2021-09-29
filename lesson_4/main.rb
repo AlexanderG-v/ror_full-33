@@ -9,6 +9,7 @@ require_relative 'cargo_train'
 require_relative 'passenger_train'
 
 puts 'Добро пожаловать на пульт управления поездами!'
+puts '=============================================='
 
 class Main
   attr_accessor :trains, :stations, :route, :wagons
@@ -28,15 +29,13 @@ class Main
             'Введите 6, что бы назначить маршрут поезду.',
             'Введите 7, что бы прицепить вагоны к поезду.',
             'Введите 8, что бы отцепить вагоны от поезда.',
-            'Введите 9, что бы отправить поезд по маршруту вперед.',
-            'Введите 10, что бы отправить поезд по маршруту назад.',
-            'Введите 11, что бы просмотреть список станций и список поездов на станциях.',
+            'Введите 9, что бы отправить поезд по маршруту вперед/назад.',
+            'Введите 10, что бы просмотреть список станций и список поездов на станциях.',
             'Введите 0, что бы выйти из программы.']
     menu.each { |item| puts item.to_s }
-  end
-
-  def item_selection
+    puts '=========================================='
     print 'Введите № команды: '
+
     user_input = gets.to_i
 
     case user_input
@@ -48,26 +47,30 @@ class Main
     when 6 then add_train_route
     when 7 then add_wagons_to_train
     when 8 then remove_wagons_from_train
-    when 9 then train_go_forvard
-    when 10 then train_go_back
-    when 11 then show_list_stations_and_trains_at_station
+    when 9 then move_train
+    when 10 then show_list_stations_and_trains_at_station
     when 0 then exit
     else
       puts 'Вы ввели неверный № команды! Пожалуйста, введите № команды из списка.'
-      item_selection
+      menu
     end
   end
 
+  private # - вызов осуществляется общедоступным методом класса
+
   def create_station
     print 'Введите название станции: '
+
     name_station = gets.chomp
 
     if @stations.find { |station| station.name == name_station }
       puts 'Станция с таким названием уже существует!'
+      create_station
     else
       @stations << Station.new(name_station)
       puts "Вы создали станцию \"#{name_station.capitalize}\"!"
-      # item_selection ?????
+      puts '=========================================='
+      menu
     end
   end
 
@@ -77,7 +80,7 @@ class Main
 
     if @trains.find { |train| train.number == num_train }
       puts 'Поезд с таким номером уже существует!'
-
+      create_train
     else
       print 'Выбирете тип поезда, где 1 - это пассажирский поезд, а 2 - это грузовой поезд: '
       type_train = gets.to_i
@@ -85,14 +88,18 @@ class Main
       when 1
         @trains << PassengerTrain.new(num_train)
         puts "Вы создали пассажирский поезд № #{num_train}!"
+        puts '===================================='
+        menu
       when 2
         @trains << CargoTrain.new(num_train)
         puts "Вы создали грузовой поезд № #{num_train}!"
+        puts '===================================='
+        menu
       else
         puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
         create_train
       end
-      # item_selection ?????
+
     end
   end
 
@@ -106,7 +113,8 @@ class Main
       last_station = gets.chomp.to_i
       @route << Route.new(stations[first_station - 1], stations[last_station - 1])
       puts 'Вы создали маршрут!'
-
+      puts '===================================='
+      menu
     else
       puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
       create_station
@@ -135,6 +143,8 @@ class Main
         else
           @route[index_route - 1].add_stations(station)
           puts 'Вы добавили станцию к маршруту!'
+          puts '===================================='
+          menu
         end
       end
     end
@@ -164,6 +174,8 @@ class Main
         else
           route.delete_station(station)
           puts 'Вы удалили станцию из маршрута!'
+          puts '===================================='
+          menu
         end
       end
     end
@@ -185,9 +197,13 @@ class Main
         when 'passenger'
           @trains[index_train - 1].add_wagons(PassengerWagons.new)
           puts 'К поезду прицеплен вагон!'
+          puts '===================================='
+          menu
         when 'cargo'
           @trains[index_train - 1].add_wagons(CargoWagons.new)
           puts 'К поезду прицеплен вагон!'
+          puts '===================================='
+          menu
         end
       end
     end
@@ -203,10 +219,12 @@ class Main
       index_train = gets.to_i
       if @trains[index_train - 1].wagons.empty?
         puts 'У поезда отсутствуют вагоны! Выберите другой поезд.'
-        trains_list
+        remove_wagons_from_train
       else
         @trains[index_train - 1].wagons.pop
         puts 'У поезда удален вагон!'
+        puts '===================================='
+        menu
       end
     end
   end
@@ -239,8 +257,46 @@ class Main
       else
         train.add_route(route)
         puts 'Вы назначили поезд маршруту!'
+        puts '===================================='
+        menu
       end
     end
+  end
+
+  def move_train
+    puts 'Выбирете порядковый номер поезда, для отправки:'
+    trains_list
+    index_train = gets.chomp.to_i
+    train = @trains[index_train - 1]
+    puts 'Выберите направление, где 1 - это вперед, а 2 - это назад.'
+    choice = gets.chomp.to_i
+    case choice
+    when 1 then train.go_forward
+                puts '===================================='
+                menu
+    when 2 then train.go_back
+                puts '===================================='
+                menu
+    else
+      puts 'Нет такого направения! Пожалуйста, повторите попытку.'
+      move_train
+    end
+  end
+
+  def show_list_stations_and_trains_at_station
+    puts 'Выберите порядковый номер станции для просмотра дополнительной информации:'
+    stations_list
+    index_station = gets.chomp.to_i
+    station = @stations[index_station - 1]
+    if station.trains.empty?
+      puts 'На этой станции нет поездов!'
+    else
+      puts 'На этой станции находится:'
+      station.trains.each_with_index do |train, index|
+        puts "#{index + 1}. Поезд № #{train.number}, тип поезда: #{train.type_train}, прицеплено вагонов: #{train.wagons.size}."
+      end
+    end
+    menu
   end
 
   def stations_list
@@ -272,6 +328,6 @@ class Main
   end
 end
 
-# main = Main.new
-# main.menu
-# main.item_selection
+main = Main.new
+main.menu
+main.item_selection
