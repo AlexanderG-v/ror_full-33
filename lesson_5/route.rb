@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'modules/module_instance_counter.rb'
+require_relative 'modules/module_instance_counter'
 class Route
   include InstanceCounter
 
