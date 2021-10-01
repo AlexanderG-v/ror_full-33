@@ -3,32 +3,35 @@
 require_relative 'module_manufacturer'
 class Train
   include Manufacturer
-  # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
+
   attr_accessor :wagons
   attr_reader :current_speed, :number
+
+  @@trains = {}
+
+  def self.find(namber)
+    @@trains[namber]
+  end
 
   def initialize(number)
     @number = number
     @wagons = []
     @current_speed = 0
+    @@trains[number] = self
   end
 
-  # - набирает скорость
   def speed_up(speed)
     self.current_speed += speed
   end
 
-  # - тормозит (сбрасывает скорость до нуля)
   def stop
     self.current_speed = 0
   end
 
-  # - прицепляет вагоны(по одному вагону за операцию) при условии, что поезд не движется
   def add_wagons(wagon)
     wagons << wagon if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
 
-  # - отцепляет вагоны по типу (грузовой/пассажирский (по одному вагону за операцию) при условии, что поезд не движется
   def remove_wagons(wagon)
     wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
