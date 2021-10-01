@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'module_manufacturer'
+require_relative 'modules/module_instance_counter.rb'
+require_relative 'modules/module_manufacturer.rb'
 class Train
   include Manufacturer
+  include InstanceCounter
 
   attr_accessor :wagons
   attr_reader :current_speed, :number
@@ -18,6 +20,7 @@ class Train
     @wagons = []
     @current_speed = 0
     @@trains[number] = self
+    register_instance
   end
 
   def speed_up(speed)

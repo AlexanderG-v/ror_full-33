@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
+require_relative 'modules/module_instance_counter.rb'
 class Route
+  include InstanceCounter
+
   # - При создании экземпляра класса указывается начальная и конечная станции
   attr_reader :stations, :name
 
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
     @name = stations.first.name, stations.last.name
-
+    register_instance
   end
 
-  #def nameexit
-  #@names = stations.first.name, +'-'+ stations.last.name
-  #end
   # - добовляет промежуточную станцию в список
   def add_stations(station)
     @stations.insert(-2, station)

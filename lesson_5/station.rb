@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'modules/module_instance_counter.rb'
 class Station
-  attr_reader :name, :trains,
+  include InstanceCounter
+
+  attr_reader :name, :trains
 
   @@stations = []
 
@@ -13,6 +16,7 @@ class Station
     @name = name
     @trains = []
     @@stations << self
+    register_instance
   end
 
   def arrival(train)
