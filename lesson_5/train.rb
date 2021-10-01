@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'module_manufacturer'
 class Train
+  include Manufacturer
   # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
   attr_accessor :wagons
   attr_reader :current_speed, :number
@@ -27,8 +29,8 @@ class Train
   end
 
   # - отцепляет вагоны по типу (грузовой/пассажирский (по одному вагону за операцию) при условии, что поезд не движется
-  def remove_wagons (wagon)
-   wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
+  def remove_wagons(wagon)
+    wagons.delete(wagon) if wagon.type_wagon == @type_train && self.current_speed.zero?
   end
 
   # - принимает маршрут следования (экземпляр класса Route)
