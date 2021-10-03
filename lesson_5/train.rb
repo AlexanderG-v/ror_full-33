@@ -8,10 +8,10 @@ class Train
   include InstanceCounter
 
   attr_accessor :wagons
-  attr_reader :current_speed, :number
+  attr_reader :current_speed, :number, :current_station
 
-  @@trains = {}
-
+  @@trains = {} # 
+# метод принимает номер поезда и возвращает объект по номеру
   def self.find(namber)
     @@trains[namber]
   end
