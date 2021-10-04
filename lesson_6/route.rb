@@ -15,6 +15,7 @@ class Route
     @stations = [first_station, last_station]
     @name = stations.first.name, stations.last.name
     register_instance
+    validate!
   end
 
   # - добовляет промежуточную станцию в список
@@ -35,5 +36,12 @@ class Route
   # - при назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте
   def add_train(train)
     @stations[0].arrival(train)
+  end
+  protected
+
+  # - проверка на наличие и количества атрибутов
+  def validate!
+    raise if stations.nil?
+    raise if stations.size < 2
   end
 end
