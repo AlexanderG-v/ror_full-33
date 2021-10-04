@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'modules/module_instance_counter'
+require_relative 'modules/module_valid'
+
 class Route
   include InstanceCounter
+  include Valid
+
 
   # - При создании экземпляра класса указывается начальная и конечная станции
   attr_reader :stations, :name

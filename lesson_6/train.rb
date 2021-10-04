@@ -2,10 +2,13 @@
 
 require_relative 'modules/module_instance_counter'
 require_relative 'modules/module_manufacturer'
+require_relative 'modules/module_valid'
+
 class Train
   # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
   include Manufacturer
   include InstanceCounter
+  include Valid
 
   attr_accessor :wagons
   attr_reader :current_speed, :number, :current_station

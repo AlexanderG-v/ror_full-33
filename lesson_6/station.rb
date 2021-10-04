@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 require_relative 'modules/module_instance_counter'
+require_relative 'modules/module_valid'
 class Station
   # - При создании экземпляра класса указывается имя экземпляра. Может возвращать список всех поездов на станции, находящихся в текущий мометн
   include InstanceCounter
+  include Valid
 
   attr_reader :name, :trains
 
@@ -18,6 +20,7 @@ class Station
     @trains = []
     @@stations << self
     register_instance
+    validate!
   end
 
   # - принимает поезда (по одному за раз)
@@ -33,5 +36,12 @@ class Station
   # - отправляет поезда (по одному за раз, при этом, поезд удаляется из спискапоездов, находящихся на станции)
   def departure(train)
     @trains.delete(train)
+  end
+
+  protected
+
+  # - проверка на наличие атрибута name
+  def validate!
+    raise if name.nil?
   end
 end
