@@ -49,9 +49,7 @@ class TextUserInterface
 
   def create_station
     print 'Введите название станции: '
-
     name_station = gets.chomp
-
     if @stations.find { |station| station.name == name_station }
       puts 'Станция с таким названием уже существует!'
       create_station
@@ -65,8 +63,7 @@ class TextUserInterface
 
   def create_train
     print 'Введите № поезда: '
-    num_train = gets.chomp.to_i
-
+    num_train = gets.chomp
     if @trains.find { |train| train.number == num_train }
       puts 'Поезд с таким номером уже существует!'
       create_train
@@ -88,8 +85,10 @@ class TextUserInterface
         puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
         create_train
       end
-
     end
+  rescue StandardError
+    puts 'Вы ввели некорректный № поезда! Попробуйте еще раз. (Пример формата №: "Ф12-12").'
+    retry
   end
 
   def create_route
