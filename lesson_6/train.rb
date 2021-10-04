@@ -5,6 +5,7 @@ require_relative 'modules/module_manufacturer'
 require_relative 'modules/module_valid'
 
 class Train
+  NUMBER_FORMATE = /^[\w\d]{3}.[\w\d]{2}$/i.freeze
   # - при создании экземпляра класса указывается номер (произвольная строка) и тип (грузовой, пассажирский)
   include Manufacturer
   include InstanceCounter
@@ -13,10 +14,10 @@ class Train
   attr_accessor :wagons
   attr_reader :current_speed, :number, :current_station
 
-  @@trains = {} # 
-# метод принимает номер поезда и возвращает объект по номеру
-  def self.find(namber)
-    @@trains[namber]
+  @@trains = {} #
+  # метод принимает номер поезда и возвращает объект по номеру
+  def self.find(number)
+    @@trains[number]
   end
 
   def initialize(number)
@@ -25,6 +26,7 @@ class Train
     @current_speed = 0
     @@trains[number] = self
     register_instance
+    validate!
   end
 
   # - набирает скорость
@@ -83,6 +85,14 @@ class Train
     @current_station.arrival(self)
   end
   # занечени current_speed устанавливается общедоступными методами
+
+  protected
+
+  # - проверка на наличие атрибутa и формат номера
+  def validate!
+    raise if number.nil?
+    raise if number !~ NUMBER_FORMATE
+  end
 
   private
 

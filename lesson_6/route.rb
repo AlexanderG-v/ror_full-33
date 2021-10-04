@@ -7,7 +7,6 @@ class Route
   include InstanceCounter
   include Valid
 
-
   # - При создании экземпляра класса указывается начальная и конечная станции
   attr_reader :stations, :name
 
@@ -37,6 +36,7 @@ class Route
   def add_train(train)
     @stations[0].arrival(train)
   end
+
   protected
 
   # - проверка на наличие и количества атрибутов
