@@ -10,6 +10,7 @@ class TextUserInterface
   end
 
   def item_selection
+    puts '===================================='
     menu = ['Введите 1, что бы создать станцию.',
             'Введите 2, что бы создать поезд.',
             'Введите 3, что бы создать маршрут.',
@@ -17,12 +18,14 @@ class TextUserInterface
             'Введите 5, что бы удалить станцию из маршрута.',
             'Введите 6, что бы назначить маршрут поезду.',
             'Введите 7, что бы прицепить вагоны к поезду.',
-            'Введите 8, что бы отцепить вагоны от поезда.',
-            'Введите 9, что бы отправить поезд по маршруту вперед/назад.',
-            'Введите 10, что бы просмотреть список станций и список поездов на станциях.',
+            'Ввудите 8, что бы занять место/объем в вагоне.',
+            'Введите 9, что бы отцепить вагоны от поезда.',
+            'Введите 10, что бы отправить поезд по маршруту вперед/назад.',
+            'Введите 11, что бы просмотреть список станций и список поездов на станциях.',
+            'Введите 12, что бы просмотреть список вагонов у поезда.',
             'Введите 0, что бы выйти из программы.']
     menu.each { |item| puts item.to_s }
-    puts '=========================================='
+    puts '===================================='
     print 'Введите № команды: '
 
     user_input = gets.to_i
@@ -35,9 +38,11 @@ class TextUserInterface
     when 5 then remove_station_frome_route
     when 6 then add_train_route
     when 7 then add_wagons_to_train
-    when 8 then remove_wagons_from_train
-    when 9 then move_train
-    when 10 then show_list_stations_and_trains_at_station
+    when 8 then take_seat_or_volume
+    when 9 then remove_wagons_from_train
+    when 10 then move_train
+    when 11 then show_list_stations_and_trains_at_station
+    when 12 then show_list_wagons
     when 0 then exit
     else
       puts 'Вы ввели неверный № команды! Пожалуйста, введите № команды из списка.'
@@ -56,7 +61,6 @@ class TextUserInterface
     else
       @stations << Station.new(name_station)
       puts "Вы создали станцию \"#{name_station.capitalize!}\"!"
-      puts '=========================================='
       item_selection
     end
   end
@@ -74,12 +78,10 @@ class TextUserInterface
       when 1
         @trains << PassengerTrain.new(num_train)
         puts "Вы создали пассажирский поезд № #{num_train}!"
-        puts '===================================='
         item_selection
       when 2
         @trains << CargoTrain.new(num_train)
         puts "Вы создали грузовой поезд № #{num_train}!"
-        puts '===================================='
         item_selection
       else
         puts 'Вы вводите неправильный тип поезда! Попробуйте еще раз.'
@@ -101,7 +103,6 @@ class TextUserInterface
       last_station = gets.chomp.to_i
       @route << Route.new(stations[first_station - 1], stations[last_station - 1])
       puts "Вы создали маршрут \"#{route.last.name.join(' - ')}\"!"
-      puts '===================================='
       item_selection
     else
       puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
@@ -132,7 +133,6 @@ class TextUserInterface
         else
           route.add_stations(station)
           puts "К маршруту \"#{route.name.join(' - ')}\" добавлена станция \"#{station.name}\"!"
-          puts '===================================='
           item_selection
         end
       end
@@ -162,7 +162,6 @@ class TextUserInterface
         else
           route.delete_station(station)
           puts "Из маршрута \"#{route.name.join(' - ')}\" удалена станция \"#{station.name}!"
-          puts '===================================='
           item_selection
         end
       end
@@ -184,16 +183,54 @@ class TextUserInterface
       else
         case train.type_train
         when 'passenger'
-          train.add_wagons(PassengerWagons.new)
+          puts 'Введите количесто мест вагона:'
+          count = gets.chomp.to_i
+          train.add_wagons(PassengerWagons.new(count))
           puts "К поезду № #{train.number} прицеплен вагон!"
-          puts '===================================='
           item_selection
         when 'cargo'
-          train.add_wagons(CargoWagons.new)
+          puts 'Введите общий объем вагона:'
+          count = gets.chomp.to_i
+          train.add_wagons(CargoWagons.new(count))
           puts "К поезду № #{train.number} прицеплен вагон!"
-          puts '===================================='
           item_selection
         end
+      end
+    end
+  end
+
+  def take_seat_or_volume
+    trains_list
+    puts 'Выбирете порядковый номер поезда:'
+    index_train = gets.chomp.to_i
+    train = @trains[index_train - 1]
+    if train.wagons.empty?
+      puts "У поезда № #{train.number} отсутствуют вагоны! Выберите другой поезд."
+      show_list_wagons
+    else
+      case train.type_train
+      when 'passenger'
+        train.wagons.each_with_index do |wagon, index|
+          puts "Вагон № #{index + 1}, кол-во свободных мест: #{wagon.free_seats}, занятых метст: #{wagon.seats_taken}."
+        end
+        puts 'Выбирете № вагона'
+        index_wagon = gets.chomp.to_i
+        wagon = train.wagons[index_wagon - 1]
+        wagon.add_seat
+        puts 'Вы заняли одно свободное место в вагоне!'
+        item_selection
+      when 'cargo'
+        train.wagons.each_with_index do |wagon, index|
+          puts "Вагон № #{index + 1}, свободный объем вагона: #{wagon.free_volume}, кол-во занятого объема: #{wagon.filled_volume}."
+        end
+        puts 'Выбирете № вагона'
+        index_wagon = gets.chomp.to_i
+        wagon = train.wagons[index_wagon - 1]
+        puts 'Введите объем, который необходимо загрузить.'
+        load = gets.chomp.to_i
+        wagon.load_volume(load)
+        puts "В вагон загружено #{load} объема!"
+        item_selection
       end
     end
   end
@@ -213,7 +250,6 @@ class TextUserInterface
       else
         train.wagons.pop
         puts "У поезда № #{train.number} удален вагон!"
-        puts '===================================='
         item_selection
       end
     end
@@ -245,7 +281,6 @@ class TextUserInterface
         else
           train.add_route(route)
           puts "Поезд № #{train.number} следует по маршруту \"#{route.name.join(' - ')}\"!"
-          puts '===================================='
           item_selection
         end
       end
@@ -262,15 +297,36 @@ class TextUserInterface
     choice = gets.chomp.to_i
     case choice
     when 1 then train.go_forward
-
-                puts '===================================='
                 item_selection
     when 2 then train.go_back
-                puts '===================================='
                 item_selection
     else
       puts 'Нет такого направения! Пожалуйста, повторите попытку.'
       move_train
+    end
+  end
+
+  def show_list_wagons
+    trains_list
+    puts 'Выбирете порядковый номер поезда:'
+    index_train = gets.chomp.to_i
+    train = @trains[index_train - 1]
+    if train.wagons.empty?
+      puts "У поезда № #{train.number} отсутствуют вагоны! Выберите другой поезд."
+      show_list_wagons
+    else
+      case train.type_train
+      when 'passenger'
+        train.wagons.each_with_index do |wagon, index|
+          puts "Вагон № #{index + 1}, тип вагона: \"#{wagon.type_wagon}\", кол-во свободных мест: #{wagon.free_seats}, занятых метст: #{wagon.seats_taken}."
+          item_selection
+        end
+      when 'cargo'
+        train.wagons.each_with_index do |wagon, index|
+          puts "Вагон № #{index + 1}, тип вагона: \"#{wagon.type_wagon}\", свободный объем вагона: #{wagon.free_volume}, кол-во занятого объема: #{wagon.filled_volume}."
+          item_selection
+        end
+      end
     end
   end
 
@@ -286,6 +342,7 @@ class TextUserInterface
       station.trains.each_with_index do |train, index|
         puts "#{index + 1}. Поезд № #{train.number}, тип поезда: #{train.type_train}, прицеплено вагонов: #{train.wagons.size}."
       end
+
     end
     item_selection
   end

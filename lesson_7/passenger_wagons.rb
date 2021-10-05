@@ -14,11 +14,11 @@ class PassengerWagons
   end
 
   def add_seat
-    self.seats_taken += 1 if @seats_taken < @count_seats
+    self.seats_taken += 1 if seats_taken < count_seats
   end
 
   def free_seats
-    @count_seats - @seats_taken
+    count_seats - seats_taken
   end
 
   

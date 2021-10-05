@@ -10,7 +10,6 @@ require_relative 'passenger_train'
 require_relative 'tui'
 
 puts 'Добро пожаловать на пульт управления поездами!'
-puts '=============================================='
 
 tui = TextUserInterface.new
 tui.item_selection
