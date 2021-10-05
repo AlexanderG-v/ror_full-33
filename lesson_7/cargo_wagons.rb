@@ -13,11 +13,11 @@ class CargoWagons
     @type_wagon = 'cargo'
   end
 
-  def load_volume(volume)
-    self.filled_volume += volume if volume + @filled_volume <= @volume
+  def load_volume(load)
+    self.filled_volume += load if load + filled_volume <= volume
   end
 
   def free_volume
-    @volume - @filled_volume
+    volume - filled_volume
   end
 end

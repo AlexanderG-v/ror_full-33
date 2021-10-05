@@ -84,7 +84,10 @@ class Train
     @current_station = previous_station
     @current_station.arrival(self)
   end
-  # занечени current_speed устанавливается общедоступными методами
+# проходит по массиву вагонов, передавая каждый объект вагона в блок
+  def all_wagons
+    @wagons.each {|wagon| yield(wagon)}
+  end
 
   protected
 
@@ -93,6 +96,7 @@ class Train
     raise if number.nil?
     raise if number !~ NUMBER_FORMATE
   end
+  # занечени current_speed устанавливается общедоступными методами
 
   private
 

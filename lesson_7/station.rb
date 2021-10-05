@@ -37,6 +37,10 @@ class Station
   def departure(train)
     @trains.delete(train)
   end
+# прошодит по массиву поездов, передавая каждый объект поезда в блок
+  def all_trains
+    @trains.each {|train| yield(train)}
+  end
 
   protected
 
