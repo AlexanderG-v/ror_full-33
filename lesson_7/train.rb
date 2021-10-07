@@ -84,7 +84,7 @@ class Train
     @current_station = previous_station
     @current_station.arrival(self)
   end
-# проходит по массиву вагонов, передавая каждый объект вагона в блок
+# проходит по массиву вагонов, передавая каждый объект в блок
   def all_wagons
     @wagons.each {|wagon| yield(wagon)}
   end
