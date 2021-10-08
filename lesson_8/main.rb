@@ -12,4 +12,5 @@ require_relative 'tui'
 puts 'Добро пожаловать на пульт управления поездами!'
 
 tui = TextUserInterface.new
+tui.shows_the_menu
 tui.item_selection
