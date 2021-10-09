@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class TextUserInterface
+  USER_INPUT = {
+    1 => :create_station, 2 => :create_train, 3 => :create_route, 4 => :add_station_in_route,
+    5 => :remove_station_frome_route, 6 => :add_train_route, 7 => :add_wagons_to_train,
+    8 => :take_seat_or_volume, 9 => :remove_wagons_from_train, 10 => :move_train,
+    11 => :show_list_stations_and_trains_at_station, 12 => :show_list_wagons, 0 => :exit
+  }.freeze
+
   attr_accessor :trains, :stations, :route, :wagons
 
   def initialize
@@ -11,19 +18,21 @@ class TextUserInterface
 
   def shows_the_menu
     puts '===================================='
-    menu = ['Введите 1, что бы создать станцию.',
-            'Введите 2, что бы создать поезд.',
-            'Введите 3, что бы создать маршрут.',
-            'Введите 4, что бы добавить станцию в маршрут.',
-            'Введите 5, что бы удалить станцию из маршрута.',
-            'Введите 6, что бы назначить маршрут поезду.',
-            'Введите 7, что бы прицепить вагоны к поезду.',
-            'Ввудите 8, что бы занять место/объем в вагоне.',
-            'Введите 9, что бы отцепить вагоны от поезда.',
-            'Введите 10, что бы отправить поезд по маршруту вперед/назад.',
-            'Введите 11, что бы просмотреть список станций и список поездов на станциях.',
-            'Введите 12, что бы просмотреть список вагонов у поезда.',
-            'Введите 0, что бы выйти из программы.']
+    menu = [
+      'Введите 1, что бы создать станцию.',
+      'Введите 2, что бы создать поезд.',
+      'Введите 3, что бы создать маршрут.',
+      'Введите 4, что бы добавить станцию в маршрут.',
+      'Введите 5, что бы удалить станцию из маршрута.',
+      'Введите 6, что бы назначить маршрут поезду.',
+      'Введите 7, что бы прицепить вагоны к поезду.',
+      'Ввудите 8, что бы занять место/объем в вагоне.',
+      'Введите 9, что бы отцепить вагоны от поезда.',
+      'Введите 10, что бы отправить поезд по маршруту вперед/назад.',
+      'Введите 11, что бы просмотреть список станций и список поездов на станциях.',
+      'Введите 12, что бы просмотреть список вагонов у поезда.',
+      'Введите 0, что бы выйти из программы.'
+    ]
     menu.each { |item| puts item.to_s }
     puts '===================================='
   end
@@ -31,24 +40,13 @@ class TextUserInterface
   def item_selection
     shows_the_menu
     print 'Введите № команды: '
-    user_input = gets.to_i
-    case user_input
-    when 1 then create_station
-    when 2 then create_train
-    when 3 then create_route
-    when 4 then add_station_in_route
-    when 5 then remove_station_frome_route
-    when 6 then add_train_route
-    when 7 then add_wagons_to_train
-    when 8 then take_seat_or_volume
-    when 9 then remove_wagons_from_train
-    when 10 then move_train
-    when 11 then show_list_stations_and_trains_at_station
-    when 12 then show_list_wagons
-    when 0 then exit
-    else
-      puts 'Вы ввели неверный № команды! Пожалуйста, введите № команды из списка.'
-    end
+    input = gets.to_i
+    USER_INPUT[input] ? send(USER_INPUT[input]) : back_to_menu
+  end
+
+  def back_to_menu
+    puts 'Вы ввели неверный № команды! Пожалуйста, введите № команды из списка.'
+    item_selection
   end
 
   private
@@ -61,9 +59,12 @@ class TextUserInterface
       create_station
     else
       @stations << Station.new(name_station)
-      puts "Вы создали станцию \"#{name_station.capitalize!}\"!"
+      puts "Вы создали станцию \"#{name_station}\"!"
       item_selection
     end
+  rescue StandardError
+    puts 'У станции должно быть название!'
+    retry
   end
 
   def create_train
@@ -95,20 +96,20 @@ class TextUserInterface
   end
 
   def create_route
-    if @stations.size >= 2
-      puts 'Для создания маршрута необходимо не менее двух станций!'
-      stations_list
-      puts 'Пожалуйста, введите порядковый номер начальной станции из списка'
-      first_station = gets.chomp.to_i
-      puts 'Теперь введите порядковый номер конечной станции.'
-      last_station = gets.chomp.to_i
-      @route << Route.new(stations[first_station - 1], stations[last_station - 1])
-      puts "Вы создали маршрут \"#{route.last.name.join(' - ')}\"!"
-      item_selection
-    else
-      puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
-      create_station
-    end
+    raise if @stations.size < 2
+
+    puts 'Для создания маршрута необходимо не менее двух станций!'
+    stations_list
+    puts 'Пожалуйста, введите порядковый номер начальной станции из списка'
+    first_station = gets.chomp.to_i
+    puts 'Теперь введите порядковый номер конечной станции.'
+    last_station = gets.chomp.to_i
+    @route << Route.new(stations[first_station - 1], stations[last_station - 1])
+    puts "Вы создали маршрут \"#{route.last.name.join(' - ')}\"!"
+    item_selection
+  rescue StandardError
+    puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
+    create_station
   end
 
   def add_station_in_route
@@ -301,10 +302,14 @@ class TextUserInterface
     puts 'Выберите направление, где 1 - это вперед, а 2 - это назад.'
     choice = gets.chomp.to_i
     case choice
-    when 1 then train.go_forward
-                item_selection
-    when 2 then train.go_back
-                item_selection
+    when 1
+      train.go_forward
+      puts "Поезд № #{train.number} отправился на станцию \"#{train.current_station.name}\"."
+      item_selection
+    when 2
+      train.go_back
+      puts "Поезд № #{train.number} отправился на станцию \"#{train.current_station.name}\"."
+      item_selection
     else
       puts 'Нет такого направения! Пожалуйста, повторите попытку.'
       move_train
@@ -317,8 +322,8 @@ class TextUserInterface
     index_train = gets.chomp.to_i
     train = @trains[index_train - 1]
     if train.wagons.empty?
-      puts "У поезда № #{train.number} отсутствуют вагоны! Выберите другой поезд."
-      show_list_wagons
+      puts "У поезда № #{train.number} отсутствуют вагоны!"
+      item_selection
     else
       case train.type_train
       when 'passenger'
@@ -353,7 +358,6 @@ class TextUserInterface
           прицеплено вагонов: #{train.wagons.size}."
         )
       end
-
     end
     item_selection
   end
@@ -367,7 +371,7 @@ class TextUserInterface
   def trains_list
     trains.each_with_index do |train, index|
       (puts "#{index + 1}. Поезд № #{train.number}, тип поезда: #{train.type_train},
-         прицеплено вагонов: #{train.wagons.size}."
+        прицеплено вагонов: #{train.wagons.size}."
       )
     end
   end

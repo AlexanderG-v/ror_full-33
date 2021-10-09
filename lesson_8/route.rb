@@ -36,6 +36,5 @@ class Route
 
   def validate!
     raise if stations.nil?
-    raise if stations.size < 2
   end
 end

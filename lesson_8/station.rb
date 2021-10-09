@@ -3,6 +3,7 @@
 require_relative 'modules/module_instance_counter'
 require_relative 'modules/module_valid'
 class Station
+  NAME_FORMATE = /^.+$/i.freeze
   include InstanceCounter
   include Valid
 
@@ -41,5 +42,6 @@ class Station
 
   def validate!
     raise if name.nil?
+    raise if name !~ NAME_FORMATE
   end
 end
