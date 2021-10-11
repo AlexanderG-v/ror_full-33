@@ -62,7 +62,7 @@ class TextUserInterface
       puts "Вы создали станцию \"#{name_station}\"!"
       item_selection
     end
-  rescue StandardError
+  rescue RuntimeError
     puts 'У станции должно быть название!'
     retry
   end
@@ -90,7 +90,7 @@ class TextUserInterface
         create_train
       end
     end
-  rescue StandardError
+  rescue RuntimeError
     puts 'Вы ввели некорректный № поезда! Попробуйте еще раз. (Пример формата №: "Ф12-12").'
     retry
   end
@@ -107,7 +107,7 @@ class TextUserInterface
     @route << Route.new(stations[first_station - 1], stations[last_station - 1])
     puts "Вы создали маршрут \"#{route.last.name.join(' - ')}\"!"
     item_selection
-  rescue StandardError
+  rescue RuntimeError
     puts 'Недостаточно станций для создания маршрутa! Пожалуйста, создайте станцию.'
     create_station
   end
