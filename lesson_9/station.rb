@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'modules/module_instance_counter'
-require_relative 'modules/module_valid'
+require_relative 'modules/module_accessors'
+require_relative 'modules/module_validation'
 class Station
   NAME_FORMATE = /^.+$/i.freeze
   include InstanceCounter
-  include Valid
+  extend Accessors
+  include Validation
 
   attr_reader :name, :trains
 
@@ -36,12 +38,5 @@ class Station
 
   def all_trains(&block)
     @trains.each(&block)
-  end
-
-  protected
-
-  def validate!
-    raise if name.nil?
-    raise if name !~ NAME_FORMATE
   end
 end

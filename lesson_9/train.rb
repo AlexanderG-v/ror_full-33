@@ -2,13 +2,15 @@
 
 require_relative 'modules/module_instance_counter'
 require_relative 'modules/module_manufacturer'
-require_relative 'modules/module_valid'
+require_relative 'modules/module_accessors'
+require_relative 'modules/module_validation'
 
 class Train
   NUMBER_FORMATE = /^[\w\d]{3}.[\w\d]{2}$/i.freeze
   include Manufacturer
   include InstanceCounter
-  include Valid
+  extend Accessors
+  include Validation
 
   attr_accessor :wagons
   attr_reader :current_speed, :number, :current_station
@@ -79,13 +81,6 @@ class Train
 
   def all_wagons(&block)
     @wagons.each(&block)
-  end
-
-  protected
-
-  def validate!
-    raise if number.nil?
-    raise if number !~ NUMBER_FORMATE
   end
 
   private

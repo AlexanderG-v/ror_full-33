@@ -21,11 +21,11 @@ module Validation
         var = instance_variable_get("@#{name}".to_sym)
         case type
         when :presence
-          raise "#{name} не может быть пустым!" if var.nil? && var.empty?
+          raise 'Не может быть пустым!' if var.nil? && var.empty?
         when :format
-          raise "#{name} - это не правильный формат!" unless var =~ options.first
+          raise 'Не правильный формат!' unless var =~ options.first
         when :type
-          raise "#{name} не соответствует классу!" unless var.instance_of?(options.first)
+          raise 'Не соответствует классу!' unless var.instance_of?(options.first)
         end
       end
     end
@@ -34,7 +34,7 @@ module Validation
   def valid?
     validate!
     true
-  rescue StandardError
+  rescue RuntimeError, ArgumentError
     false
   end
 end

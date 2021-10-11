@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'modules/module_instance_counter'
-require_relative 'modules/module_valid'
+require_relative 'modules/module_accessors'
+require_relative 'modules/module_validation'
 
 class Route
   include InstanceCounter
-  include Valid
+  extend Accessors
+  include Validation
 
   attr_reader :stations, :name
 
@@ -30,11 +32,5 @@ class Route
 
   def add_train(train)
     @stations.first.arrival(train)
-  end
-
-  protected
-
-  def validate!
-    raise if stations.nil?
   end
 end
